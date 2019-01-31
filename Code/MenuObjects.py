@@ -1,4 +1,4 @@
-from Settings import *
+from Code.Settings import *
 
 
 class Button(pg.sprite.Sprite):
@@ -6,7 +6,6 @@ class Button(pg.sprite.Sprite):
     def __init__(self, position, size, text, colour, spriteGroup, click_state):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface(size)
-        self.w, self.h = (size)
         self.rect = self.image.get_rect()
         self.rect.center = position
         self.w, self.h = (size)

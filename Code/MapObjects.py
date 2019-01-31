@@ -1,6 +1,6 @@
-from Settings import *
-from Textures import *
-from Score import *
+from Code.Settings import *
+from Code.Textures import *
+from Code.Score import *
 
 
 # all objects on the map apart from player inherit from this class

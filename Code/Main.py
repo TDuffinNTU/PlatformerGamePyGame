@@ -6,13 +6,11 @@
 # https://gist.github.com/iminurnamez/8d51f5b40032f106a847
 
 import sys
-import pygame as pg
-from Settings import *
-from MenuObjects import *
-from Textures import *
-from MapObjects import *
-from Player import *
-from Score import *
+from Code.MenuObjects import *
+from Code.MapObjects import *
+from Code.Player import *
+from Code.Score import *
+
     
 class Game(object):
     # The game, states, and events are handled through this class.
@@ -123,6 +121,7 @@ class MainMenu(GameState):
         self.load_button = Button((WIDTH/2, 300), (150, 40), "LOAD", pg.Color("dodgerblue"), self.sprite_group, "LOADGAME")
         self.scores_button = Button((WIDTH/2, 400), (150, 40), "HISCORES", pg.Color("dodgerblue"), self.sprite_group, "HISCORES")
         self.exit_button = Button((WIDTH/2, 500), (150, 40), "EXIT", pg.Color("red"), self.sprite_group, "EXIT")
+        self.controls_button = Button((85, 30), (150, 40), "HOW TO PLAY", pg.Color("red"), self.sprite_group, "CONTROLS")
 
         # add buttons to the button group
         for sprite in self.sprite_group:
@@ -628,6 +627,35 @@ class HighScores(GameState):
             f.writelines(data)
 
 
+class ControlMenu(GameState):
+    def __init__(self):
+        super(ControlMenu, self).__init__()
+
+        self.sprite_group.empty()
+        self.return_button = Button((WIDTH / 2, 500), (150, 40), "RETURN", pg.Color("dodgerblue"), self.sprite_group, "MAINMENU")
+
+        self.title_label = Text((WIDTH/2,60), "CONTROLS", 60, pg.Color("grey"), self.sprite_group)
+
+        self.controls_label_1 = Text ((WIDTH/2,100), "WASD TO MOVE, SPACE TO JUMP/DOUBLE JUMP", 40, pg.Color("grey"), self.sprite_group)
+        self.controls_label_2 = Text ((WIDTH/2,150), "GET TO THE GOAL ASAP!", 40, pg.Color("grey"), self.sprite_group)
+
+
+    def get_event(self, event):
+        if event.type == pg.QUIT:
+            self.quit = True
+        #handle mouse events for selecting buttons
+        elif event.type == pg.MOUSEBUTTONDOWN:
+            if self.return_button.if_hovered():
+                self.next_state = self.return_button.clicked()
+                self.done = True
+
+    def update(self, dt):
+        self.sprite_group.update()
+
+    def draw(self, surface):
+        surface.fill(pg.Color("grey"))
+        self.sprite_group.draw(surface)
+
 # Quits the game
 class Exit(GameState):
     def __init__(self):
@@ -653,7 +681,8 @@ states = {
     "LEVELPAUSE": LevelPause,
     "ENDLEVEL": EndLevel,
     "EXIT": Exit,
-    "HISCORES": HighScores
+    "HISCORES": HighScores,
+    "CONTROLS": ControlMenu
 }
 
 # Create instance of the Game class, setting its initial state to the Main Menu

@@ -1,4 +1,4 @@
-from Settings import *
+from Code.Settings import *
 
 #Class which tracks the score for every level.
 class Score:

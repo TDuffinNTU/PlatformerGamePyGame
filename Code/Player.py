@@ -1,5 +1,5 @@
-from Settings import *
-from Textures import *
+from Code.Settings import *
+from Code.Textures import *
 
 
 # Player Class

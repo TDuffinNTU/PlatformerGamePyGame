@@ -1,7 +1,7 @@
 import pygame as pg
 
 # Current version of the game
-VERSION = "B_1.0"
+VERSION = "B_1.1"
 
 # Screen Variables
 WIDTH = 800
