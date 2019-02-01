@@ -1,3 +1,7 @@
+from Scenes.StateMachine import *
+from Code.MenuObjects import *
+from Code.Settings import *
+
 class EndLevel(GameState):
     def __init__(self):
         super(EndLevel,self).__init__()

@@ -1,3 +1,7 @@
+from Scenes.StateMachine import *
+from Code.MenuObjects import *
+from Code.Settings import *
+
 class HighScores(GameState):
     def __init__(self):
         #Inherit from GameState class

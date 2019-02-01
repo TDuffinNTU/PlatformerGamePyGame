@@ -1,3 +1,7 @@
+from Scenes.StateMachine import *
+from Code.MenuObjects import *
+from Code.Settings import *
+
 class ControlMenu(GameState):
     def __init__(self):
         super(ControlMenu, self).__init__()

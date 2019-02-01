@@ -1,4 +1,7 @@
-class Game(object):
+import pygame as pg
+
+
+class Game:
     # The game, states, and events are handled through this class.
     # The game class is a Finite-State Machine, adapted from this github example:
     # https://gist.github.com/iminurnamez/8d51f5b40032f106a847
@@ -60,7 +63,7 @@ class Game(object):
 
 # The GameState class defines states within the Finite-State Machine, adapted from this github example:
 # https://gist.github.com/iminurnamez/8d51f5b40032f106a847
-class GameState(object):
+class GameState:
     # Parent class of all GameStates
     def __init__(self):
         self.done = False
@@ -93,3 +96,6 @@ class GameState(object):
     def draw(self, surface):
         # Draw everything to the screen.
         pass
+
+
+

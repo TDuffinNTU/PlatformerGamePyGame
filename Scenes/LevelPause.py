@@ -1,3 +1,7 @@
+from Scenes.StateMachine import *
+from Code.MenuObjects import *
+from Code.Settings import *
+
 class LevelPause(GameState):
     def __init__(self):
         super(LevelPause, self).__init__()

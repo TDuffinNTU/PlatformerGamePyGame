@@ -1,3 +1,6 @@
+from Scenes.StateMachine import *
+from Code.Settings import *
+
 class LoadGame(GameState):
     def __init__(self):
         super(LoadGame, self).__init__()

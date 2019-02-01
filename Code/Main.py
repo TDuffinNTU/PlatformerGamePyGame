@@ -685,6 +685,8 @@ states = {
     "CONTROLS": ControlMenu
 }
 
+
+
 # Create instance of the Game class, setting its initial state to the Main Menu
 game = Game(screen, states, "MAINMENU")
 # start game execution

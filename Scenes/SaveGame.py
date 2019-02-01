@@ -1,3 +1,6 @@
+from Scenes.StateMachine import *
+from Code.Settings import *
+
 # saves the game at the end of every level
 class SaveGame(GameState):
     # inherit from gamestate
