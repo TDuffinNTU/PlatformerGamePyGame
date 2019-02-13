@@ -1,76 +1,106 @@
 import pygame as pg
+import Code.Settings as settings
 
-# TODO Change FSM to stack-based system to avoid circular references, make code cleaner/faster
-# Stack class for the stack-based FSM
-class Stack:
-    def init(self):
-        self.items = []
-        self.top = None
+# Fully implemented stack-based FSM
 
-    def push(self, item):
-        self.items.append(item)
-        self.top = item
+#TODO implement pygame features
+# State class handles menus, gameplay, other user-interaction
+class State:
+    # Final version will have game data passed between states via initializer
+    def __init__(self, game_data):
+        self.suspend_me = False
+        self.suspend_params = []
+        self.game_data = game_data
 
-    def pop(self):
-        if len(self.items):
-            self.items.pop()
-            self.top = self.items[-1]
 
-    def swap(self, item):
-        self.items.pop()
-        self.push(item)
+    # The user can interact directly with the application's state "stack" from within a state instance
+    def exit_state(self, keyword = None, next_state = None):
+        # Sets the suspend_me flag to true so that the statemachine knows its time to flip
+        if str(keyword).upper() in ["PUSH", "POP", "SWAP"]:
+            self.suspend_params = [keyword, next_state]
+            self.suspend_me = True
+        else:
+            print("Failed to transition between states with params: {0}".format([keyword, next_state]))
 
-    def peek(self):
-        return self.top
+    # initilising code outside of init()
+    def startup(self):
+        pass
 
-    def count(self):
-        return len(self.items)
+    # handles user input
+    def get_event(self, event):
+        pass
 
-    def stack(self):
-        return self.items
+    # update sprites, other data
+    def update(self, dt):
+        pass
 
-# The modified state machine for use with stacks
-class StackMachine:
-    def __init__(self, screen, initial_state):
-        # pygame data
-        self.screen = screen
+    # draw the updated data to the screen
+    def draw(self, screen):
+        pass
+
+# Statemachine controls which state machine gets control at any one time
+class StateMachine:
+    def __init__(self, initial_state):
+        # Initialise pygame
+        pg.init()
+
+        # pygame variables
+        self.screen = pg.display.set_mode((settings.WIDTH, settings.HEIGHT))
         self.clock = pg.time.Clock()
         self.frame_rate = 60
-        # stack/state data
-        self.states = Stack()
-        self.states.push(initial_state)
-        self.current_state = self.states.peek()()
+        self.delta_time = 0
+        self.game_data = {}
+        self.running = True
 
-        self.quit = False
+        # Using a list as a stack allows for stack-based design pattern for UI management
+        self.stack = []
+        self.stack.append(initial_state)
 
-    #TODO implement these as interfaces to stack class
-    def push_state(self):
-        pass
+        # Underlying functions for executing state methods should remain unchanged.
+        self.current_state: State = self.stack[-1](self.game_data)
+        self.current_state.startup()
 
-    def pop_state(self):
-        pass
+    # give program control to a new state
+    def flip_state(self):
+        # Get the arguments from the state
+        args = self.current_state.suspend_params
+        self.game_data = self.current_state.game_data
 
-    def swap_state(self):
-        pass
+        # process arguments to get new running state
+        if args[0] == "PUSH":
+            self.stack.append(args[1])
+        elif args[0] == "POP" and len(self.stack):
+            self.stack.pop()
+        elif args[0] == "SWAP":
+            if len(self.stack):
+                self.stack.pop()
+            self.stack.append(args[1])
 
+        # New running state is initialised
+        self.current_state = self.stack[-1](self.game_data)
+
+    # will handle pygame events
     def event_loop(self):
         for event in pg.event.get():
             self.current_state.get_event(event)
+            if event.type == pg.QUIT:
+                self.running = False
 
+    # check that state isn't suspended yet, otherwise update
     def update(self, dt):
+        if self.current_state.suspend_me:
+            self.flip_state()
         self.current_state.update(dt)
 
     def draw(self):
         self.current_state.draw(self.screen)
 
+    # run all the other functions until stopped
     def run(self):
-        while not self.quit:
+        while self.running:
             dt = self.clock.tick(self.frame_rate)
             self.event_loop()
             self.update(dt)
             self.draw()
             pg.display.update()
 
-class State:
-    def __init__(self, data):
-        pass

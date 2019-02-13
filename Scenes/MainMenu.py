@@ -1,11 +1,12 @@
-from Scenes.StateMachine import *
+from Scenes.StackStateMachine import *
 from Code.MenuObjects import *
 from Code.Settings import *
 
-class MainMenu(GameState):
-    def __init__(self):
-        super(MainMenu, self).__init__()
+class MainMenu(State):
+    def __init__(self, game_data):
+        super(MainMenu, self).__init__(game_data)
 
+        self.sprite_group = pg.sprite.Group()
         # Empty and initialise sprite groups
         self.sprite_group.empty()
         self.button_group = pg.sprite.Group()
@@ -23,7 +24,7 @@ class MainMenu(GameState):
 
         self.title_label = Text((WIDTH/2,60),"Platformer ver: " + VERSION,50,pg.Color("grey"),self.sprite_group)
         # Setting attribs from persistent dict.
-        self.persist["screen_colour"] = "grey"
+        self.game_data["screen_colour"] = "grey"
 
     def get_event(self, event):
         if event.type == pg.QUIT:
@@ -35,11 +36,11 @@ class MainMenu(GameState):
                     self.next_state = sprite.clicked()
                     #if player selects to start new game, set scores/level to default values
                     if self.next_state == "LEVELLOAD":
-                        self.persist["next_level"] = 1
+                        self.game_data["next_level"] = 1
                         GLOBALS["final_score"] = 0
                         GLOBALS["level_scores"][:] = []
 
-                    self.persist["screen_colour"] = "grey"
+                    self.game_data["screen_colour"] = "grey"
                     self.done = True
 
     # update sprites
